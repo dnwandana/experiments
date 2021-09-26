@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-example-deployment
+  labels:
+    app: k8s-example
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: k8s-example
+  template:
+    metadata:
+      labels:
+        app: k8s-example
+    spec:
+      containers:
+        - name: k8s-example
+          image: docker.io/dnwandana/k8s-example:1.0
+          ports:
+            - containerPort: 5000
+          resources:
+            limits:
+              cpu: "256m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-example-service
+spec:
+  type: NodePort
+  selector:
+    app: k8s-example
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 31000
